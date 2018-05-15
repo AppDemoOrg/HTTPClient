@@ -1,4 +1,4 @@
-package com.abt.https;
+package com.abt.http;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

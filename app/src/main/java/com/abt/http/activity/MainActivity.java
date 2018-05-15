@@ -1,11 +1,10 @@
-package com.abt.https;
+package com.abt.http.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import com.abt.http.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    initSSLWithHttpClinet();
+                    //initSSLWithHttpClinet();
                 } catch (Exception e) {
                     Log.e("HTTPS TEST", e.getMessage());
                 }
@@ -127,11 +126,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * HttpClient方式实现，支持所有Https免验证方式链接
-     *
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public void initSSLAllWithHttpClient() throws ClientProtocolException, IOException {
+    /*public void initSSLAllWithHttpClient() throws ClientProtocolException, IOException {
         int timeOut = 30 * 1000;
         HttpParams param = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(param, timeOut);
@@ -155,15 +153,13 @@ public class MainActivity extends AppCompatActivity {
             result.append(line);
         }
         Log.e("HTTPS TEST", result.toString());
-    }
+    }*/
 
     /**
      * HttpClient方式实现，支持验证指定证书
-     *
-     * @throws ClientProtocolException
      * @throws IOException
      */
-    public void initSSLCertainWithHttpClient() throws ClientProtocolException, IOException {
+    /*public void initSSLCertainWithHttpClient() throws ClientProtocolException, IOException {
         int timeOut = 30 * 1000;
         HttpParams param = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(param, timeOut);
@@ -188,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             result.append(line);
         }
         Log.e("HTTPS TEST", result.toString());
-    }
+    }*/
 
     public class TrustAllManager implements X509TrustManager {
 
