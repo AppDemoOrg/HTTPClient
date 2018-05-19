@@ -1,5 +1,5 @@
 # HTTPClient
 
-## 参考文献
-[Android 网络请求库Retrofit简单使用](https://blog.csdn.net/u011974987/article/details/50895633)
-
+## 参考文献  
+1、[Android 网络请求库Retrofit简单使用](https://blog.csdn.net/u011974987/article/details/50895633)    
+2、[白话图解HTTPS原理](https://www.cnblogs.com/ghjbk/p/6738069.html)    
