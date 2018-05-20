@@ -7,3 +7,6 @@
 3、[Android HTTPS如何10分钟实现自签名SSL证书](https://www.cnblogs.com/tommylemon/p/5454303.html)    
 
 
+## 参考项目
+1、[HttpDemo](https://github.com/yxdroid/HttpDemo)    
+2、
