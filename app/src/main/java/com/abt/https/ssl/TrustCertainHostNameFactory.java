@@ -1,4 +1,4 @@
-package com.abt.http.ssl;
+package com.abt.https.ssl;
 
 import android.content.Context;
 

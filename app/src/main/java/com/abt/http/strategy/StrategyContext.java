@@ -7,7 +7,32 @@ package com.abt.http.strategy;
  */
 public class StrategyContext {
 
-    Strategy strategy;
+    private Strategy strategy;
+
+    public StrategyContext() {
+
+    }
+
+    public Strategy getStrategy(int httpType) {
+        switch (httpType) {
+            case 1:
+                strategy = new OKHttp();
+                break;
+            case 2:
+                strategy = new Volley();
+                break;
+            case 3:
+                strategy = new Retrofit();
+                break;
+            case 4:
+                strategy = new RxJavaRetrofit();
+                break;
+            case 5:
+                strategy = new AsynHttp();
+                break;
+        }
+        return strategy;
+    }
 
     public StrategyContext(Strategy strategy) {
         this.strategy = strategy;

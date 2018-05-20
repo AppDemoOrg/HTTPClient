@@ -7,13 +7,9 @@ package com.abt.http.bean;
  */
 public class Result<T> {
     public static final int OK_CODE = 0;
-    // token 过期
-    public static final int TOKEN_CODE = -1;
-
+    public static final int TOKEN_CODE = -1; // token 过期
     private String reason;
-
     private T result;
-
     private int error_code;
 
     public String getReason() {

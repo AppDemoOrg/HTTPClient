@@ -1,4 +1,4 @@
-package com.abt.http.retrofit;
+package com.abt.http.framework.retrofit;
 
 import com.abt.http.global.GlobalConstant;
 

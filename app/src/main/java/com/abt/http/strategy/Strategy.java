@@ -5,7 +5,7 @@ package com.abt.http.strategy;
  * @作者： @黄卫旗
  * @创建时间： @17/05/2018
  */
-abstract class Strategy {
+public abstract class Strategy {
 
     public abstract void doHttp(boolean get);
 

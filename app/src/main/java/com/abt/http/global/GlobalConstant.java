@@ -15,8 +15,10 @@ public class GlobalConstant {
     public static final String API = "http://op.juhe.cn/onebox/news/query";
     public static final String API_GET = "http://op.juhe.cn/onebox/news/query?key=5173fa20d74cf85747dcf6f4636856af&q=\"\"";
 
+    public static final String OKHTTP_APIKEY = "5173fa20d74cf85747dcf6f4636856af";
+
     public static String RETROFIT_BASEURL = "http://op.juhe.cn/"; // 服务器地址
     public static String RETROFIT_APIKEY = "5173fa20d74cf85747dcf6f4636856af";
 
-    public static final String OKHTTP_APIKEY = "5173fa20d74cf85747dcf6f4636856af";
+
 }

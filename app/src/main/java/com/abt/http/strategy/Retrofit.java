@@ -3,8 +3,8 @@ package com.abt.http.strategy;
 import com.abt.http.bean.News;
 import com.abt.http.bean.Result;
 import com.abt.http.global.GlobalConstant;
-import com.abt.http.retrofit.RetrofitService;
-import com.abt.http.retrofit.RetrofitWrapper;
+import com.abt.http.framework.retrofit.RetrofitService;
+import com.abt.http.framework.retrofit.RetrofitWrapper;
 import com.abt.http.viewmodel.HTTPViewModel;
 
 import java.io.IOException;
