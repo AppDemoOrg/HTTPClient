@@ -14,6 +14,7 @@ public class StrategyContext {
     }
 
     public Strategy getStrategy(int httpType) {
+        if (httpType<0 || httpType>5) httpType = 1;
         switch (httpType) {
             case 1:
                 strategy = new OKHttp();

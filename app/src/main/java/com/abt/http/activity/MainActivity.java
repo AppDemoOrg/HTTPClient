@@ -2,6 +2,7 @@ package com.abt.http.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.rg_http)
     RadioGroup rgHttp;
+    @BindView(R.id.ok_http)
+    RadioButton okHttp;
     @BindView(R.id.tv_result)
     TextView tvResult;
     @OnClick(R.id.btn_get) void doGet() {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements
         HTTPViewModel.getInstance().setContext(this);
         HTTPViewModel.getInstance().setResultView(tvResult);
         rgHttp.setOnCheckedChangeListener(this);
+        okHttp.setChecked(true);
     }
 
     /**
