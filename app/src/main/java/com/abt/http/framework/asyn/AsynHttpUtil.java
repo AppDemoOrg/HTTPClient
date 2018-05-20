@@ -31,7 +31,6 @@ public class AsynHttpUtil {
 
     /**
      * 发送Get 请求
-     *
      * @param context  用于取消http请求的凭证
      * @param url
      * @param callback 异步请求回调接口
@@ -42,7 +41,6 @@ public class AsynHttpUtil {
 
     /**
      * 发送POST 请求
-     *
      * @param context  用于取消http请求的凭证
      * @param url
      * @param params   请求参数回对象
@@ -54,7 +52,6 @@ public class AsynHttpUtil {
 
     /**
      * 取消http 请求
-     *
      * @param context 取消该上下文中的所有请求
      */
     public void cancelRequest(Context context) {

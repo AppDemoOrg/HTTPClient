@@ -10,7 +10,7 @@ import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
 
 /**
- * @描述： @
+ * @描述： @AsynHttp
  * @作者： @黄卫旗
  * @创建时间： @20/05/2018
  */
@@ -22,7 +22,7 @@ public class AsynHttp extends Strategy {
             AsynHttpUtil.getInstance().sendGetRequest(HttpApp.getAppContext(), GlobalConstant.API_GET, asynCallback());
         } else {
             RequestParams params = new RequestParams();
-            params.put("key", "5173fa20d74cf85747dcf6f4636856af");
+            params.put("key", GlobalConstant.API_KEY);
             params.put("q", "\"\"");
             AsynHttpUtil.getInstance().sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, asynCallback());
         }
