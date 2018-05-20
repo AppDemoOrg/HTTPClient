@@ -4,6 +4,7 @@ import com.abt.http.bean.News;
 import com.abt.http.bean.Result;
 import com.abt.http.framework.retrofit.RetrofitService;
 import com.abt.http.framework.retrofit.RetrofitWrapper;
+import com.abt.http.global.GlobalConstant;
 import com.abt.http.viewmodel.HTTPViewModel;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class RxJavaRetrofit extends Strategy {
 
     @Override
     public void doHttp(boolean get) {
-        RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsList("5173fa20d74cf85747dcf6f4636856af", "\"\"")
+        RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsList(GlobalConstant.API_KEY, "\"\"")
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
