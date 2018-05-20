@@ -17,7 +17,9 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 
 /**
- * Created by huangweiqi on 11/05/2018.
+ * @描述： @TrustCertainHostNameFactory
+ * @作者： @黄卫旗
+ * @创建时间： @20/05/2018
  */
 public class TrustCertainHostNameFactory extends SSLSocketFactory {
 

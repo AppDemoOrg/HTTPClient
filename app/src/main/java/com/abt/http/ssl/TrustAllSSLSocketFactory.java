@@ -25,7 +25,9 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Created by huangweiqi on 11/05/2018.
+ * @描述： @TrustAllSSLSocketFactory
+ * @作者： @黄卫旗
+ * @创建时间： @20/05/2018
  */
 public class TrustAllSSLSocketFactory extends SSLSocketFactory {
     private javax.net.ssl.SSLSocketFactory factory;
@@ -36,7 +38,7 @@ public class TrustAllSSLSocketFactory extends SSLSocketFactory {
         super(null);
 
         SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, new TrustManager[] { new TrustAllManager() }, null);
+        context.init(null, new TrustManager[]{new TrustAllManager()}, null);
         factory = context.getSocketFactory();
         setHostnameVerifier(new X509HostnameVerifier() {
 
