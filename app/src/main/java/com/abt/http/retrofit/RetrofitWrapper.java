@@ -1,5 +1,7 @@
 package com.abt.http.retrofit;
 
+import com.abt.http.global.GlobalConstant;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -28,7 +30,7 @@ public class RetrofitWrapper {
     private RetrofitWrapper() {
         retrofit = new Retrofit.Builder()
                 // 接口基地址
-                .baseUrl(Constant.BASEURL)
+                .baseUrl(GlobalConstant.RETROFIT_BASEURL)
                 // 添加格式转换器
                 .addConverterFactory(GsonConverterFactory.create())
                 // 添加RxJava适配模式

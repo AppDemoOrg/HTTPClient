@@ -12,10 +12,17 @@ import com.orhanobut.logger.Logger;
  */
 public class HttpApp extends Application {
 
+    private static HttpApp mContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         Logger.addLogAdapter(new AndroidLogAdapter());
+    }
+
+    public static final HttpApp getAppContext(){
+        return mContext;
     }
 
 }

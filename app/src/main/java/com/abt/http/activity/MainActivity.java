@@ -8,17 +8,20 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.abt.http.bean.News;
 import com.abt.http.R;
-import com.abt.http.bean.Result;
 import com.abt.http.asyn.AsynHttpUtil;
+import com.abt.http.bean.News;
+import com.abt.http.bean.Result;
+import com.abt.http.global.GlobalConstant;
 import com.abt.http.okhttp.HttpException;
 import com.abt.http.okhttp.HttpRequestCallback;
 import com.abt.http.okhttp.OkHttpUtil;
 import com.abt.http.okhttp.OkRequestParams;
-import com.abt.http.retrofit.Constant;
 import com.abt.http.retrofit.RetrofitService;
 import com.abt.http.retrofit.RetrofitWrapper;
+import com.abt.http.strategy.Retrofit;
+import com.abt.http.strategy.StrategyContext;
+import com.abt.http.viewmodel.HTTPViewModel;
 import com.abt.http.volley.VolleyCallback;
 import com.abt.http.volley.VolleyRequestParams;
 import com.abt.http.volley.VolleyUtil;
@@ -51,13 +54,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView tvResult;
     private ProgressDialog loadingDialog;
 
-    /**
-     * q	string	是	需要检索的关键字,请UTF8 URLENCODE
-     * key	string	是	应用APPKEY(应用详细页查询)
-     * dtype	string	否	返回数据的格式,xml或json，默认json
-     */
-    private static final String API = "http://op.juhe.cn/onebox/news/query";
-    private static final String API_GET = "http://op.juhe.cn/onebox/news/query?key=5173fa20d74cf85747dcf6f4636856af&q=\"\"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +63,13 @@ public class MainActivity extends AppCompatActivity implements
         rgHttp = (RadioGroup) findViewById(R.id.rg_http);
         tvResult = (TextView) findViewById(R.id.tv_result);
         rgHttp.setOnCheckedChangeListener(this);
+
+        HTTPViewModel.getInstance().setContext(this);
+        HTTPViewModel.getInstance().setResultView(tvResult);
     }
 
     /**
      * 获取新闻列表
-     *
      * @param get
      */
     private void getNewsList(boolean get) {
@@ -81,37 +79,40 @@ public class MainActivity extends AppCompatActivity implements
             // OKHttp
             case 1:
                 if (get) {
-                    OkHttpUtil.getInstance().sendGetRequest(this, API_GET, okHttpCallback());
+                    OkHttpUtil.getInstance().sendGetRequest(this, GlobalConstant.API_GET, okHttpCallback());
                 } else {
                     OkRequestParams params = new OkRequestParams();
                     params.put("key", "5173fa20d74cf85747dcf6f4636856af");
                     params.put("q", "\"\"");
-                    OkHttpUtil.getInstance().sendPostRequest(this, API, params, okHttpCallback());
+                    OkHttpUtil.getInstance().sendPostRequest(this, GlobalConstant.API, params, okHttpCallback());
                 }
                 break;
             // Volley
             case 2:
                 showLoadingDialog();
                 if (get) {
-                    VolleyUtil.getInstance(this).sendGetRequest(this, API_GET, volleyCallback());
+                    VolleyUtil.getInstance(this).sendGetRequest(this, GlobalConstant.API_GET, volleyCallback());
                 } else {
                     VolleyRequestParams params = new VolleyRequestParams();
                     params.put("key", "5173fa20d74cf85747dcf6f4636856af");
                     params.put("q", "\"\"");
-                    VolleyUtil.getInstance(this).sendPostRequest(this, API, params, volleyCallback());
+                    VolleyUtil.getInstance(this).sendPostRequest(this, GlobalConstant.API, params, volleyCallback());
                 }
                 break;
             // Retrofit
             case 3:
-                showLoadingDialog();
+                /*showLoadingDialog();
                 // 通过call 发起请求和取消请求
                 retrofit2.Call<Result<List<News>>> call;
                 if (get) {
-                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByGet(Constant.APIKEY, "\"\"");
+                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByGet(GlobalConstant.RETROFIT_APIKEY, "\"\"");
                 } else {
-                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByPost(Constant.APIKEY, "\"\"");
+                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByPost(GlobalConstant.RETROFIT_APIKEY, "\"\"");
                 }
-                RetrofitWrapper.getInstance().sendRequest(call, retrofitCallback());
+                RetrofitWrapper.getInstance().sendRequest(call, retrofitCallback());*/
+
+                StrategyContext context = new StrategyContext(new Retrofit());
+                context.doHttp(get);
                 break;
             // RxJava + Retrofit
             case 4:
@@ -174,12 +175,12 @@ public class MainActivity extends AppCompatActivity implements
             // Android Asynchronous Http Client
             case 5:
                 if (get) {
-                    AsynHttpUtil.getInstance().sendGetRequest(this, API_GET, asynCallback());
+                    AsynHttpUtil.getInstance().sendGetRequest(this, GlobalConstant.API_GET, asynCallback());
                 } else {
                     RequestParams params = new RequestParams();
                     params.put("key", "5173fa20d74cf85747dcf6f4636856af");
                     params.put("q", "\"\"");
-                    AsynHttpUtil.getInstance().sendPostRequest(this, API, params, asynCallback());
+                    AsynHttpUtil.getInstance().sendPostRequest(this, GlobalConstant.API, params, asynCallback());
                 }
                 break;
         }
