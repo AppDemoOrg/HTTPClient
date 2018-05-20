@@ -30,7 +30,7 @@ public class RetrofitWrapper {
     private RetrofitWrapper() {
         retrofit = new Retrofit.Builder()
                 // 接口基地址
-                .baseUrl(GlobalConstant.RETROFIT_BASEURL)
+                .baseUrl(GlobalConstant.BASE_URL)
                 // 添加格式转换器
                 .addConverterFactory(GsonConverterFactory.create())
                 // 添加RxJava适配模式
@@ -40,7 +40,6 @@ public class RetrofitWrapper {
 
     /**
      * 创建请求服务接口
-     *
      * @param clazz
      * @param <T>
      * @return
@@ -51,7 +50,6 @@ public class RetrofitWrapper {
 
     /**
      * 发起请求
-     *
      * @param call
      * @param callback
      */
@@ -62,7 +60,6 @@ public class RetrofitWrapper {
     /**
      * 传入请求时的call对象
      * 取消请求
-     *
      * @param call
      */
     public void cancelRequest(Call call) {

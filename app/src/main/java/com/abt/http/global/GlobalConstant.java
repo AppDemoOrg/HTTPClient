@@ -17,7 +17,7 @@ public class GlobalConstant {
 
     public static final String API_KEY = "5173fa20d74cf85747dcf6f4636856af";
 
-    public static String RETROFIT_BASEURL = "http://op.juhe.cn/"; // 服务器地址
+    public static String BASE_URL = "http://op.juhe.cn/"; // 服务器地址
 
 
 }
