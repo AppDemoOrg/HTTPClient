@@ -1,209 +1,349 @@
 package com.abt.http.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.abt.http.bean.News;
 import com.abt.http.R;
+import com.abt.http.bean.Result;
+import com.abt.http.asyn.AsynHttpUtil;
+import com.abt.http.okhttp.HttpException;
+import com.abt.http.okhttp.HttpRequestCallback;
+import com.abt.http.okhttp.OkHttpUtil;
+import com.abt.http.okhttp.OkRequestParams;
+import com.abt.http.retrofit.Constant;
+import com.abt.http.retrofit.RetrofitService;
+import com.abt.http.retrofit.RetrofitWrapper;
+import com.abt.http.volley.VolleyCallback;
+import com.abt.http.volley.VolleyRequestParams;
+import com.abt.http.volley.VolleyUtil;
+import com.android.volley.VolleyError;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
+import cz.msebera.android.httpclient.Header;
+import okhttp3.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
- * HTTPS测试 测试地址：https://certs.cac.washington.edu/CAtest/
- * 测试证书：https://www.washington.edu/itconnect/security/ca/load-der.crt
+ * @描述： @MainActivity
+ * @作者： @黄卫旗
+ * @创建时间： @16/05/2018
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        RadioGroup.OnCheckedChangeListener {
+
+    private RadioGroup rgHttp;
+    private TextView tvResult;
+    private ProgressDialog loadingDialog;
+
+    /**
+     * q	string	是	需要检索的关键字,请UTF8 URLENCODE
+     * key	string	是	应用APPKEY(应用详细页查询)
+     * dtype	string	否	返回数据的格式,xml或json，默认json
+     */
+    private static final String API = "http://op.juhe.cn/onebox/news/query";
+    private static final String API_GET = "http://op.juhe.cn/onebox/news/query?key=5173fa20d74cf85747dcf6f4636856af&q=\"\"";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Thread(new Runnable() {
+
+        rgHttp = (RadioGroup) findViewById(R.id.rg_http);
+        tvResult = (TextView) findViewById(R.id.tv_result);
+        rgHttp.setOnCheckedChangeListener(this);
+    }
+
+    /**
+     * 获取新闻列表
+     *
+     * @param get
+     */
+    private void getNewsList(boolean get) {
+        tvResult.setText("");
+        int httpType = rgHttp.getCheckedRadioButtonId();
+        switch (httpType) {
+            // OKHttp
+            case 1:
+                if (get) {
+                    OkHttpUtil.getInstance().sendGetRequest(this, API_GET, okHttpCallback());
+                } else {
+                    OkRequestParams params = new OkRequestParams();
+                    params.put("key", "5173fa20d74cf85747dcf6f4636856af");
+                    params.put("q", "\"\"");
+                    OkHttpUtil.getInstance().sendPostRequest(this, API, params, okHttpCallback());
+                }
+                break;
+            // Volley
+            case 2:
+                showLoadingDialog();
+                if (get) {
+                    VolleyUtil.getInstance(this).sendGetRequest(this, API_GET, volleyCallback());
+                } else {
+                    VolleyRequestParams params = new VolleyRequestParams();
+                    params.put("key", "5173fa20d74cf85747dcf6f4636856af");
+                    params.put("q", "\"\"");
+                    VolleyUtil.getInstance(this).sendPostRequest(this, API, params, volleyCallback());
+                }
+                break;
+            // Retrofit
+            case 3:
+                showLoadingDialog();
+                // 通过call 发起请求和取消请求
+                retrofit2.Call<Result<List<News>>> call;
+                if (get) {
+                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByGet(Constant.APIKEY, "\"\"");
+                } else {
+                    call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByPost(Constant.APIKEY, "\"\"");
+                }
+                RetrofitWrapper.getInstance().sendRequest(call, retrofitCallback());
+                break;
+            // RxJava + Retrofit
+            case 4:
+                RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsList("5173fa20d74cf85747dcf6f4636856af", "\"\"")
+                        .subscribeOn(Schedulers.io())
+                        .doOnSubscribe(new Action0() {
+                            @Override
+                            public void call() {
+                                showLoadingDialog();
+                            }
+                        })
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(new Func1<Result<List<News>>, Result<List<News>>>() {
+                            @Override
+                            public Result<List<News>> call(Result<List<News>> result) {
+                                if (Result.TOKEN_CODE == result.getError_code()) {
+                                    // 跳转到用户登录页面
+                                    //startActivity(new Intent(AppManager.getInstance().currentActivity(), LoginActivity.class));
+                                    setResult(false, "token 过期");
+                                    return null;
+                                } else {
+                                    return result;
+                                }
+                            }
+                        })
+                        .subscribe(new Subscriber<Result<List<News>>>() {
+                            @Override
+                            public void onCompleted() {
+                                closeLoadingDialog();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                closeLoadingDialog();
+                                setResult(false, e.toString());
+                            }
+
+                            @Override
+                            public void onNext(Result<List<News>> result) {
+                                if (result == null) {
+                                    return;
+                                }
+
+                                if (result.getError_code() == 0) {
+                                    List<News> list = result.getResult();
+                                    if (list != null && !list.isEmpty()) {
+                                        StringBuffer sb = new StringBuffer();
+                                        for (News news : list) {
+                                            sb.append(news.getFull_title() + "\n");
+                                        }
+                                        setResult(true, sb.toString());
+                                    }
+                                } else {
+                                    setResult(true, result.getReason());
+                                }
+                            }
+                        });
+                break;
+            // Android Asynchronous Http Client
+            case 5:
+                if (get) {
+                    AsynHttpUtil.getInstance().sendGetRequest(this, API_GET, asynCallback());
+                } else {
+                    RequestParams params = new RequestParams();
+                    params.put("key", "5173fa20d74cf85747dcf6f4636856af");
+                    params.put("q", "\"\"");
+                    AsynHttpUtil.getInstance().sendPostRequest(this, API, params, asynCallback());
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * 获取Retrofit 异步回掉接口
+     *
+     * @return
+     */
+    private Callback<Result<List<News>>> retrofitCallback() {
+        return new Callback<Result<List<News>>>() {
             @Override
-            public void run() {
-                try {
-                    //initSSLWithHttpClinet();
-                } catch (Exception e) {
-                    Log.e("HTTPS TEST", e.getMessage());
+            public void onResponse(retrofit2.Call<Result<List<News>>> call, Response<Result<List<News>>> response) {
+                closeLoadingDialog();
+
+                if (response.isSuccessful()) {
+                    //注意这里用第一个Response参数的
+                    Result<List<News>> result = response.body();
+                    if (result.getError_code() == 0) {
+                        List<News> list = result.getResult();
+                        if (list != null && !list.isEmpty()) {
+                            StringBuffer sb = new StringBuffer();
+                            for (News news : list) {
+                                sb.append(news.getFull_title() + "\n");
+                            }
+                            setResult(true, sb.toString());
+                        }
+                    } else {
+                        setResult(true, result.getReason());
+                    }
+                } else {
+                    try {
+                        setResult(false, response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }).start();
-    }
-
-    /**
-     * HttpUrlConnection 方式，支持指定load-der.crt证书验证，此种方式Android官方建议
-     *
-     * @throws CertificateException
-     * @throws IOException
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
-     */
-    public void initSSL() throws CertificateException, IOException, KeyStoreException,
-            NoSuchAlgorithmException, KeyManagementException {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        InputStream in = getAssets().open("load-der.crt");
-        Certificate ca = cf.generateCertificate(in);
-
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keystore.load(null, null);
-        keystore.setCertificateEntry("ca", ca);
-
-        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-        tmf.init(keystore);
-
-        // Create an SSLContext that uses our TrustManager
-        SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, tmf.getTrustManagers(), null);
-        URL url = new URL("https://certs.cac.washington.edu/CAtest/");
-        HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-        urlConnection.setSSLSocketFactory(context.getSocketFactory());
-        InputStream input = urlConnection.getInputStream();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-        Log.e("TTTT", result.toString());
-    }
-
-    /**
-     * HttpUrlConnection支持所有Https免验证，不建议使用
-     *
-     * @throws KeyManagementException
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     */
-    public void initSSLALL() throws KeyManagementException, NoSuchAlgorithmException, IOException {
-        URL url = new URL("https://certs.cac.washington.edu/CAtest/");
-        SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, new TrustManager[] { new TrustAllManager() }, null);
-        HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 
             @Override
-            public boolean verify(String arg0, SSLSession arg1) {
-                return true;
+            public void onFailure(retrofit2.Call<Result<List<News>>> call, Throwable t) {
+                closeLoadingDialog();
+                setResult(false, t.getMessage());
             }
-        });
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setDoInput(true);
-        connection.setDoOutput(false);
-        connection.setRequestMethod("GET");
-        connection.connect();
-        InputStream in = connection.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        String line = "";
-        StringBuffer result = new StringBuffer();
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-        Log.e("TTTT", result.toString());
+        };
     }
 
     /**
-     * HttpClient方式实现，支持所有Https免验证方式链接
-     * @throws ClientProtocolException
-     * @throws IOException
+     * 获取Volley异步请求接口回调
+     *
+     * @return
      */
-    /*public void initSSLAllWithHttpClient() throws ClientProtocolException, IOException {
-        int timeOut = 30 * 1000;
-        HttpParams param = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(param, timeOut);
-        HttpConnectionParams.setSoTimeout(param, timeOut);
-        HttpConnectionParams.setTcpNoDelay(param, true);
+    private VolleyCallback<String> volleyCallback() {
+        return new VolleyCallback() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                closeLoadingDialog();
+                setResult(false, error.getMessage());
+            }
 
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        registry.register(new Scheme("https", TrustAllSSLSocketFactory.getDefault(), 443));
-        ClientConnectionManager manager = new ThreadSafeClientConnManager(param, registry);
-        DefaultHttpClient client = new DefaultHttpClient(manager, param);
-
-        HttpGet request = new HttpGet("https://certs.cac.washington.edu/CAtest/");
-        // HttpGet request = new HttpGet("https://www.alipay.com/");
-        HttpResponse response = client.execute(request);
-        HttpEntity entity = response.getEntity();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-        StringBuilder result = new StringBuilder();
-        String line = "";
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-        Log.e("HTTPS TEST", result.toString());
-    }*/
+            @Override
+            public void onResponse(Object response) {
+                closeLoadingDialog();
+                Log.d("", response.toString());
+                setResult(true, response.toString());
+            }
+        };
+    }
 
     /**
-     * HttpClient方式实现，支持验证指定证书
-     * @throws IOException
+     * 获取OKHttp 异步请求回调接口
+     * @return
      */
-    /*public void initSSLCertainWithHttpClient() throws ClientProtocolException, IOException {
-        int timeOut = 30 * 1000;
-        HttpParams param = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(param, timeOut);
-        HttpConnectionParams.setSoTimeout(param, timeOut);
-        HttpConnectionParams.setTcpNoDelay(param, true);
+    private HttpRequestCallback<String> okHttpCallback() {
+        return new HttpRequestCallback<String>() {
+            @Override
+            public void onStart() {
+                showLoadingDialog();
+            }
 
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        registry.register(new Scheme("https", TrustCertainHostNameFactory.getDefault(this), 443));
-        ClientConnectionManager manager = new ThreadSafeClientConnManager(param, registry);
-        DefaultHttpClient client = new DefaultHttpClient(manager, param);
+            @Override
+            public void onFinish() {
+                closeLoadingDialog();
+            }
 
-        // HttpGet request = new
-        // HttpGet("https://certs.cac.washington.edu/CAtest/");
-        HttpGet request = new HttpGet("https://www.alipay.com/");
-        HttpResponse response = client.execute(request);
-        HttpEntity entity = response.getEntity();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-        StringBuilder result = new StringBuilder();
-        String line = "";
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
-        }
-        Log.e("HTTPS TEST", result.toString());
-    }*/
+            @Override
+            public void onResponse(String s) {
+                setResult(true, s);
+            }
 
-    public class TrustAllManager implements X509TrustManager {
+            @Override
+            public void onFailure(Call call, HttpException e) {
+                setResult(false, e.getMessage());
+            }
+        };
+    }
 
-        @Override
-        public void checkClientTrusted(X509Certificate[] arg0, String arg1)
-                throws CertificateException {
+    /**
+     * 获取Android Asynchronous Http Client 异步请求回调接口
+     * 也可返回 JsonHttpResponseHandler 接口回调 自动将响应结果解析为json格式
+     *
+     * @return
+     */
+    private AsyncHttpResponseHandler asynCallback() {
+        return new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                showLoadingDialog();
+            }
 
-        }
+            @Override
+            public void onFinish() {
+                closeLoadingDialog();
+            }
 
-        @Override
-        public void checkServerTrusted(X509Certificate[] arg0, String arg1)
-                throws CertificateException {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                setResult(true, new String(responseBody));
+            }
 
-        }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                setResult(false, error.getMessage());
+            }
+        };
+    }
 
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return null;
+    private void setResult(boolean success, String result) {
+        if (success) {
+            tvResult.setText("请求结果\n-------------------------------------------\n" + result);
+        } else {
+            tvResult.setText("请求异常\n-----------------------\n" + result);
         }
     }
 
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_get:
+                getNewsList(true);
+                break;
+            case R.id.btn_post:
+                getNewsList(false);
+                break;
+        }
+    }
+
+    private void showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = new ProgressDialog(this);
+            loadingDialog.setTitle("loading...");
+        }
+        loadingDialog.show();
+    }
+
+    private void closeLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+    }
 }
