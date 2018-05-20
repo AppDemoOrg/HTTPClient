@@ -1,11 +1,11 @@
 package com.abt.http.strategy;
 
 import com.abt.http.HttpApp;
+import com.abt.http.framework.okhttp.HttpException;
+import com.abt.http.framework.okhttp.HttpRequestCallback;
+import com.abt.http.framework.okhttp.OkHttpUtil;
+import com.abt.http.framework.okhttp.OkRequestParams;
 import com.abt.http.global.GlobalConstant;
-import com.abt.http.okhttp.HttpException;
-import com.abt.http.okhttp.HttpRequestCallback;
-import com.abt.http.okhttp.OkHttpUtil;
-import com.abt.http.okhttp.OkRequestParams;
 import com.abt.http.viewmodel.HTTPViewModel;
 
 import okhttp3.Call;
