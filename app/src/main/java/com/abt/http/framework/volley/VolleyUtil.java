@@ -16,6 +16,7 @@ import java.util.Map;
  * @创建时间： @20/05/2018
  */
 public class VolleyUtil {
+
     private static VolleyUtil instance;
 
     private RequestQueue requestQueue;
@@ -35,7 +36,6 @@ public class VolleyUtil {
 
     /**
      * Get 请求
-     *
      * @param context
      * @param url
      * @param callback
@@ -48,7 +48,6 @@ public class VolleyUtil {
 
     /**
      * 发送Post请求
-     *
      * @param context
      * @param url
      * @param params
@@ -67,7 +66,6 @@ public class VolleyUtil {
 
     /**
      * 取消该tag下的请求
-     *
      * @param context
      */
     public void cancelRequest(Context context) {

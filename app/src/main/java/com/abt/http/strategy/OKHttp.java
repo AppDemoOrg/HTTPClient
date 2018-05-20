@@ -23,7 +23,7 @@ public class OKHttp extends Strategy {
             OkHttpUtil.getInstance().sendGetRequest(HttpApp.getAppContext(), GlobalConstant.API_GET, okHttpCallback());
         } else {
             OkRequestParams params = new OkRequestParams();
-            params.put("key", GlobalConstant.OKHTTP_APIKEY);
+            params.put("key", GlobalConstant.API_KEY);
             params.put("q", "\"\"");
             OkHttpUtil.getInstance().sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, okHttpCallback());
         }

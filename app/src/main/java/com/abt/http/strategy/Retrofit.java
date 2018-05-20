@@ -26,9 +26,9 @@ public class Retrofit extends Strategy {
         // 通过call 发起请求和取消请求
         retrofit2.Call<Result<List<News>>> call;
         if (get) {
-            call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByGet(GlobalConstant.RETROFIT_APIKEY, "\"\"");
+            call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByGet(GlobalConstant.API_KEY, "\"\"");
         } else {
-            call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByPost(GlobalConstant.RETROFIT_APIKEY, "\"\"");
+            call = RetrofitWrapper.getInstance().createService(RetrofitService.class).getNewsListByPost(GlobalConstant.API_KEY, "\"\"");
         }
         RetrofitWrapper.getInstance().sendRequest(call, retrofitCallback());
     }

@@ -24,7 +24,7 @@ public class Volley extends Strategy {
             VolleyUtil.getInstance(HttpApp.getAppContext()).sendGetRequest(HttpApp.getAppContext(), GlobalConstant.API_GET, volleyCallback());
         } else {
             VolleyRequestParams params = new VolleyRequestParams();
-            params.put("key", "5173fa20d74cf85747dcf6f4636856af");
+            params.put("key", GlobalConstant.API_KEY);
             params.put("q", "\"\"");
             VolleyUtil.getInstance(HttpApp.getAppContext()).sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, volleyCallback());
         }
