@@ -1,7 +1,7 @@
 package com.abt.http.strategy;
 
 import com.abt.http.HttpApp;
-import com.abt.http.framework.asyn.AsynHttpUtil;
+import com.abt.http.framework.asyn.AsyncHttpUtil;
 import com.abt.http.global.GlobalConstant;
 import com.abt.http.viewmodel.HTTPViewModel;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -19,12 +19,12 @@ public class AsynHttp extends Strategy {
     @Override
     public void doHttp(boolean get) {
         if (get) {
-            AsynHttpUtil.getInstance().sendGetRequest(HttpApp.getAppContext(), GlobalConstant.API_GET, asynCallback());
+            AsyncHttpUtil.getInstance().sendGetRequest(HttpApp.getAppContext(), GlobalConstant.API_GET, asynCallback());
         } else {
             RequestParams params = new RequestParams();
             params.put("key", GlobalConstant.API_KEY);
             params.put("q", "\"\"");
-            AsynHttpUtil.getInstance().sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, asynCallback());
+            AsyncHttpUtil.getInstance().sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, asynCallback());
         }
     }
 

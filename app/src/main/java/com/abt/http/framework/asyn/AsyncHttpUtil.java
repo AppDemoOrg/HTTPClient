@@ -7,25 +7,25 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /**
- * @描述： @AsynHttpUtil
+ * @描述： @AsyncHttpUtil
  * @作者： @黄卫旗
  * @创建时间： @16/05/2018
  */
-public class AsynHttpUtil {
-    private static AsynHttpUtil instance;
+public class AsyncHttpUtil {
+    private static AsyncHttpUtil instance;
 
     private AsyncHttpClient asyncHttpClient;
 
-    public static AsynHttpUtil getInstance() {
+    public static AsyncHttpUtil getInstance() {
         if (instance == null) {
-            synchronized (AsynHttpUtil.class) {
-                instance = new AsynHttpUtil();
+            synchronized (AsyncHttpUtil.class) {
+                instance = new AsyncHttpUtil();
             }
         }
         return instance;
     }
 
-    private AsynHttpUtil() {
+    private AsyncHttpUtil() {
         asyncHttpClient = new AsyncHttpClient();
     }
 
