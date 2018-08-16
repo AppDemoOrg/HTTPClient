@@ -46,7 +46,7 @@ public class OkHttpUtil {
     }
 
     /**
-     * 发送Get 请求
+     * 发送异步的Get请求
      *
      * @param context  通过context.getClass().getName() 设置请求tag，用来取消请求
      * @param url
@@ -55,6 +55,18 @@ public class OkHttpUtil {
     public void sendGetRequest(Context context, String url, HttpRequestCallback callback) {
         Request request = new Request.Builder().tag(getTagByContext(context)).url(url).get().build();
         okHttpClient.newCall(request).enqueue(getCallback(context, callback));
+    }
+
+    /**
+     * 发送同步的Get请求
+     *
+     * @param context
+     * @param url
+     * @throws IOException
+     */
+    public void sendGetSyncRequest(Context context, String url) throws IOException {
+        Request request = new Request.Builder().tag(getTagByContext(context)).url(url).get().build();
+        okHttpClient.newCall(request).execute();
     }
 
     /**

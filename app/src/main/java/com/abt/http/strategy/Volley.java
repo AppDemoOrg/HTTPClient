@@ -28,7 +28,6 @@ public class Volley extends Strategy {
             params.put("q", "\"\"");
             VolleyUtil.getInstance(HttpApp.getAppContext()).sendPostRequest(HttpApp.getAppContext(), GlobalConstant.API, params, volleyCallback());
         }
-
     }
 
     /**
