@@ -83,6 +83,18 @@ public class OkHttpUtil {
     }
 
     /**
+     * 发送同步的Post请求
+     *
+     * @param context
+     * @param url
+     * @throws IOException
+     */
+    public void sendPostSyncRequest(Context context, String url, OkRequestParams params) throws IOException {
+        Request request = new Request.Builder().tag(getTagByContext(context)).url(url).post(params.toParams()).build();
+        Response response = okHttpClient.newCall(request).execute();
+    }
+
+    /**
      * 通过context 生成http 请求tag
      * tag 用来标识 http 请求，可通过tag 来取消请求
      *
