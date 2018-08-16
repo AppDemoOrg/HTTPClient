@@ -1,7 +1,7 @@
 package com.abt.http.strategy;
 
 import com.abt.http.HttpApp;
-import com.abt.http.framework.asyn.AsyncHttpUtil;
+import com.abt.http.framework.async.AsyncHttpUtil;
 import com.abt.http.global.GlobalConstant;
 import com.abt.http.viewmodel.HTTPViewModel;
 import com.loopj.android.http.AsyncHttpResponseHandler;

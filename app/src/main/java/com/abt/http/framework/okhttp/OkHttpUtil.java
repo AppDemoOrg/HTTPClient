@@ -66,7 +66,7 @@ public class OkHttpUtil {
      */
     public void sendGetSyncRequest(Context context, String url) throws IOException {
         Request request = new Request.Builder().tag(getTagByContext(context)).url(url).get().build();
-        okHttpClient.newCall(request).execute();
+        Response response = okHttpClient.newCall(request).execute();
     }
 
     /**
