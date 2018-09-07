@@ -15,6 +15,7 @@ TODO：
 
 1、[OkHttp中https的使用](https://www.jianshu.com/p/1373889e74b2)          
 2、[Android Https相关完全解析当OkHttp遇到Https](https://blog.csdn.net/lmj623565791/article/details/48129405)    
+3、[hongyangAndroid/okhttputils](https://github.com/hongyangAndroid/okhttputils)           
 
 
 ## RETORFIT
