@@ -1,0 +1,46 @@
+
+
+
+    @Override
+    public void login(final String username, final String password, final OnLoginFinishedListener listener) {
+        LogHelper.d(TAG, "login, username = "+username+", password ="+password);
+        if (TextUtils.isEmpty(username)) {
+            listener.onUsernameError();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            listener.onPasswordError();
+            return;
+        }
+
+        WebApis apis =  RetrofitWrapper.getInstance().create(CloudApi.class);
+        Call<LoginResultBean> callLogin = apis.userLogin(username, password);
+        RetrofitWrapper.getInstance().sendRequest(callLogin, new Callback<LoginResultBean>() {
+            @Override
+            public void onResponse(Call<LoginResultBean> call, Response<LoginResultBean> response) {
+                if (response.isSuccessful()) {
+                    LoginResultBean result = response.body();
+                    LogHelper.d(TAG, "login success, error_no = "+result.error_no);
+                    LogHelper.d(TAG, "login success, error_msg = "+result.error_msg);
+                    LogHelper.d(TAG, "login success, user_id = "+result.user_id);
+                    LogHelper.d(TAG, "login success, user_token = "+result.user_token);
+
+                    if (result != null && ErrorCode.CODE_200.equals(result.error_no)) {
+                        listener.onSuccess();
+                        LatestApp.setToken(result.getUser_token());
+                        saveData(result, username, password);
+                    } else {
+                        listener.onLoginFailure();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResultBean> call, Throwable t) {
+                listener.onLoginFailure();
+                LogHelper.d(TAG, "login failure, username = "+username);
+            }
+        });
+        
+        
+        
