@@ -8,43 +8,39 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * @描述： @Retrofit网络请求库
- * @作者： @黄卫旗
- * @创建时间： @20/05/2018
+ * @author 黄卫旗
+ * @description RetrofitWrapper
+ * @time 2018/09/07
  */
 public class RetrofitWrapper {
 
-    private static RetrofitWrapper instance;
-
     private Retrofit retrofit;
 
-    public static RetrofitWrapper getInstance() {
-        if (instance == null) {
-            synchronized (RetrofitWrapper.class) {
-                instance = new RetrofitWrapper();
-            }
-        }
-        return instance;
+    private static class InnerClass {
+        private static RetrofitWrapper sInstance = new RetrofitWrapper();
     }
 
     private RetrofitWrapper() {
         retrofit = new Retrofit.Builder()
                 // 接口基地址
-                .baseUrl(GlobalConstant.BASE_URL)
+                .baseUrl(URLConstant.SERVER_DOMAIN)
                 // 添加格式转换器
                 .addConverterFactory(GsonConverterFactory.create())
                 // 添加RxJava适配模式
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                //.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
+    }
+
+    public static RetrofitWrapper getInstance() {
+        return InnerClass.sInstance;
     }
 
     /**
      * 创建请求服务接口
      * @param clazz
      * @param <T>
-     * @return
      */
-    public <T> T createService(Class<T> clazz) {
+    public <T> T create(Class<T> clazz) {
         return retrofit.create(clazz);
     }
 
@@ -67,3 +63,5 @@ public class RetrofitWrapper {
     }
 
 }
+
+
