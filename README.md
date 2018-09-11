@@ -19,11 +19,19 @@ TODO：
 
 
 ## RETORFIT      
-###AndroidStudio插件 GsonFormat          
+### AndroidStudio插件 GsonFormat          
 利用AndroidStudio插件 GsonFormat 快速，方便的将json数据转为Java 对象        
- 
+
+### 实现步骤：      
+1、定义API接口CloudApi和相应的JavaBean           
+2、定义RetrofitWrapper初始化Retrofit             
+3、CloudApi apis =  RetrofitWrapper.getInstance().create(CloudApi.class);       
+   Call<LoginResultBean> callLogin = apis.userLogin(username, password);            
+   RetrofitWrapper.getInstance().sendRequest(callLogin, new Callback<LoginResultBean>()          
+     
 ### 资料       
 1、[Android 网络请求库Retrofit简单使用](https://blog.csdn.net/u011974987/article/details/50895633)     
+
 
 ## 参考项目  
 1、[HttpDemo](https://github.com/yxdroid/HttpDemo)      
