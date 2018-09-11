@@ -18,7 +18,11 @@ TODO：
 3、[hongyangAndroid/okhttputils](https://github.com/hongyangAndroid/okhttputils)           
 
 
-## RETORFIT
+## RETORFIT      
+###AndroidStudio插件 GsonFormat          
+利用AndroidStudio插件 GsonFormat 快速，方便的将json数据转为Java 对象        
+ 
+### 资料       
 1、[Android 网络请求库Retrofit简单使用](https://blog.csdn.net/u011974987/article/details/50895633)     
 
 ## 参考项目  
