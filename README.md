@@ -35,6 +35,11 @@ TODO：
 3、[Retrofit各个注解的含义及作用](https://blog.csdn.net/qiang_xi/article/details/53959437)       
 
 
+## RxJava
+1、[搭建自己的框架之1：Rxjava2+Retrofit2 实现Android Http请求](https://www.jianshu.com/p/04ce0c91e3ee)                  
+2、     
+3、     
+
 ## 参考项目  
 1、[HttpDemo](https://github.com/yxdroid/HttpDemo)      
 2、[AndroidHttpsDemo](https://github.com/Frank-Zhu/AndroidHttpsDemo)       
