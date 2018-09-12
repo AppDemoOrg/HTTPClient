@@ -32,6 +32,8 @@ TODO：
 ### 资料       
 1、[Android 网络请求库Retrofit简单使用](https://blog.csdn.net/u011974987/article/details/50895633)     
 2、[Retrofit配置详解及封装，让你的网络请求更简单](https://www.jianshu.com/p/7a4b3766f86d)          
+3、[Retrofit各个注解的含义及作用](https://blog.csdn.net/qiang_xi/article/details/53959437)       
+
 
 ## 参考项目  
 1、[HttpDemo](https://github.com/yxdroid/HttpDemo)      
