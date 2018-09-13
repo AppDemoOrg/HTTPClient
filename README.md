@@ -37,7 +37,8 @@ TODO：
 
 ## RxJava
 1、[搭建自己的框架之1：Rxjava2+Retrofit2 实现Android Http请求](https://www.jianshu.com/p/04ce0c91e3ee)                  
-2、     
+2、[非常重要：Rxjava2+retrofit2封装 post 固定json参数](https://www.jianshu.com/p/9df6c7e3c39f)           
+
 
 ### RxJava-TODO
 1、[（一）Rxjava2+Retrofit完美封装](https://blog.csdn.net/qq_20521573/article/details/70991850)             
