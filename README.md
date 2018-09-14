@@ -1,6 +1,10 @@
 
 # HTTPClient  
 
+## Cookies
+1、[快速理解 session/token/cookie 认证方式](https://blog.csdn.net/Jmilk/article/details/55686267?locationNum=9&fps=1)   
+
+
 ## HTTPS      
 1、[白话图解HTTPS原理](https://www.cnblogs.com/ghjbk/p/6738069.html)      
 2、[Android HTTPS如何10分钟实现自签名SSL证书](https://www.cnblogs.com/tommylemon/p/5454303.html)     
