@@ -7,6 +7,8 @@
 ## SSL/TLS TODO        
 1、[SSL与TLS的区别](https://blog.csdn.net/bjbz_cxy/article/details/77850182)             
 2、[详解SSL/TLS](http://www.mamicode.com/info-detail-1846390.html)       
+3、[聊聊HTTPS和SSL/TLS协议](http://www.techug.com/post/https-ssl-tls.html)      
+4、[SSL与TLS的区别以及介绍](https://blog.csdn.net/anningzhu/article/details/77517432)      
 
 ## HTTPS      
 1、[白话图解HTTPS原理](https://www.cnblogs.com/ghjbk/p/6738069.html)      
