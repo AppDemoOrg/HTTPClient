@@ -10,6 +10,7 @@
 2、[Android HTTPS如何10分钟实现自签名SSL证书](https://www.cnblogs.com/tommylemon/p/5454303.html)     
 3、[也许，这样理解HTTPS更容易](http://showme.codes/2017-02-20/understand-https/)    
 4、[OpenSSL 1.0.0生成p12、jks、crt等格式证书的命令个过程(转)](https://www.cnblogs.com/bluestorm/archive/2013/06/26/3155945.html)      
+5、[SSL与TLS的区别](https://blog.csdn.net/bjbz_cxy/article/details/77850182)            
 
 ## OKHTTP
 
